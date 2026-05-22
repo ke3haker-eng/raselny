@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>raselny - محادثات آمنة</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <h1>raselny</h1>
+                <div class="header-actions">
+                    <button id="sidebar-toggle" aria-label="قائمة المحادثات">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <button id="lang-toggle" aria-label="تبديل اللغة">EN</button>
+                    <button id="menu-toggle" aria-label="الإعدادات">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h2 id="sidebar-title">المحادثات</h2>
+                <button id="new-chat-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <span id="new-chat-text">محادثة جديدة</span>
+                </button>
+            </div>
+            <div id="search-bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="chat-search" placeholder="البحث عن محادثة...">
+            </div>
+            <nav id="chat-list"></nav>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main id="chat-main">
+            <div id="chat-welcome">
+                <div class="welcome-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
+                </div>
+                <h3 id="welcome-title">ابدأ محادثة جديدة</h3>
+                <p id="welcome-desc">اختر جهة تواصل من القائمة أو ابدأ محادثة جديدة</p>
+            </div>
+            <div id="chat-container" class="hidden">
+                <header id="chat-header">
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar" id="chat-header-avatar">?</div>
+                        <div class="chat-header-text">
+                            <h3 id="chat-title">جارٍ التحميل...</h3>
+                            <span id="chat-status">متصل</span>
+                        </div>
+                    </div>
+                    <div id="chat-controls">
+                        <button id="attachment-btn" aria-label="إرفاق ملف">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                            </svg>
+                        </button>
+                        <input type="file" id="file-input" multiple accept="image/*,video/*,audio/*" hidden>
+                        <button id="video-call-btn" aria-label="مكالمة فيديو">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <polygon points="23 7 16 12 23 17 23 7"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </button>
+                        <button id="voice-call-btn" aria-label="مكالمة صوتية">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+                <div id="messages"></div>
+                <form id="message-form">
+                    <textarea id="message-input" placeholder="اكتب رسالة..." rows="1" required></textarea>
+                    <div class="form-actions">
+                        <button type="button" id="temp-toggle" aria-label="تبديل الرسالة المؤقتة">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </button>
+                        <button type="submit" id="send-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </span>
+
+                <!-- Login Form -->
+                <div id="login-view">
+                    <div class="modal-header">
+                        <h2 id="login-title">تسجيل الدخول</h2>
+                        <p id="login-desc">أهلاً بعودتك! سجل دخولك للمتابعة</p>
+                    </div>
+                    <div class="modal-body">
+                        <form id="login-form" autocomplete="off">
+                            <input type="email" id="login-email" placeholder="البريد الإلكتروني" required autocomplete="email">
+                            <input type="password" id="login-password" placeholder="كلمة المرور" required autocomplete="current-password">
+                            <button type="submit" id="login-btn">تسجيل الدخول</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <p>ليس لديك حساب؟ <a href="#" id="show-signup">إنشاء حساب جديد</a></p>
+                    </div>
+                </div>
+
+                <!-- Signup Form -->
+                <div id="signup-view" class="hidden">
+                    <div class="modal-header">
+                        <h2 id="signup-title">إنشاء حساب جديد</h2>
+                        <p id="signup-desc">انضم إلى المحادثات الآمنة</p>
+                    </div>
+                    <div class="modal-body">
+                        <form id="signup-form" autocomplete="off">
+                            <input type="text" id="signup-name" placeholder="الاسم الكامل" required autocomplete="name">
+                            <input type="email" id="signup-email" placeholder="البريد الإلكتروني" required autocomplete="email">
+                            <input type="password" id="signup-password" placeholder="كلمة المرور" required autocomplete="new-password">
+                            <button type="submit" id="signup-btn">إنشاء حساب</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <p>لديك حساب بالفعل؟ <a href="#" id="show-login">تسجيل الدخول</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Search Modal -->
+        <div id="user-search-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-user-search">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </span>
+                <div class="modal-header">
+                    <h2 id="search-user-title">بدء محادثة جديدة</h2>
+                    <p id="search-user-desc">ابحث عن مستخدم لبدء محادثة معه</p>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="user-search-input" placeholder="البحث بالاسم أو البريد الإلكتروني...">
+                    <div id="user-search-results"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-settings">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </span>
+                <div class="modal-header">
+                    <h2 id="settings-title">الإعدادات</h2>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <div class="settings-group">
+                        <label>
+                            <span class="label-text" id="dark-mode-label">الوضع الداكن</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label>
+                            <span class="label-text" id="temp-default-label">الرسائل المؤقتة افتراضيًا</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="temp-msgs" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label>
+                            <span class="label-text" id="lang-label">اللغة</span>
+                        </label>
+                        <select id="language-select">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="logout-btn">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <!-- Install Banner -->
+        <div id="install-banner">
+            <div class="banner-content">
+                <h3 id="install-text">ثبت التطبيق لتجربة أفضل</h3>
+                <button id="install-btn">تثبيت</button>
+                <button id="close-banner">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
